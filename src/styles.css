@@ -426,32 +426,6 @@ main {
 .grid img:hover {
   transform: scale(1.05);
 }
-
-/* Testimonials */
-.testimonials {
-  padding: 4rem 0;
-}
-
-.testimonials h2 {
-  text-align: center;
-  margin-bottom: 2rem;
-  font-size: 2.5rem;
-  color: var(--text);
-}
-
-.testimonials .card {
-  background: var(--card);
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(8, 20, 40, 0.04);
-  margin-bottom: 1.5rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  font-style: italic;
-  border-left: 4px solid var(--accent);
-}
-
 /* ========== OTHER PAGES STYLES ========== */
 /* Booking Page */
 .booking-page {
@@ -651,6 +625,7 @@ main .container h1::after {
   background-color: var(--card);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
+
 
 /* ========== RESPONSIVE DESIGN ========== */
 @media (max-width: 768px) {
