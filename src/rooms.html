@@ -1,11 +1,424 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Cottages — Heart Of D' Ocean Beach Resort</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap">
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+      transition: all 0.3s ease;
+    }
+    
+    [data-theme="dark"] body {
+      background-color: #072433;
+      color: #fff;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header Styles */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .site-header {
+      background: rgba(7, 36, 51, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    
+    [data-theme="dark"] .logo {
+      color: #4dabf7;
+    }
+    
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    [data-theme="dark"] .nav a {
+      color: #fff;
+    }
+    
+    .nav a:hover {
+      color: #1a73e8;
+    }
+    
+    [data-theme="dark"] .nav a:hover {
+      color: #4dabf7;
+    }
+    
+    .cta {
+      background-color: #1a73e8;
+      color: white !important;
+      padding: 8px 16px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    
+    [data-theme="dark"] .cta {
+      background-color: #4dabf7;
+    }
+    
+    .cta:hover {
+      background-color: #0d62d9;
+    }
+    
+    [data-theme="dark"] .cta:hover {
+      background-color: #339af0;
+    }
+    
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #333;
+      transition: color 0.3s;
+    }
+    
+    [data-theme="dark"] .icon-btn {
+      color: #fff;
+    }
+    
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #333;
+    }
+    
+    [data-theme="dark"] .hamburger {
+      color: #fff;
+    }
+    
+    /* Main Content */
+    main {
+      padding: 100px 0 40px;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #1a73e8;
+    }
+    
+    [data-theme="dark"] h1 {
+      color: #4dabf7;
+    }
+    
+    /* Cards Grid */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    
+    .room-card {
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    
+    [data-theme="dark"] .room-card {
+      background-color: #0c2d41;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    
+    .room-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    [data-theme="dark"] .room-card:hover {
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+    
+    .room-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .room-body {
+      padding: 15px;
+    }
+    
+    .room-body h3 {
+      margin: 0;
+      color: #333;
+    }
+    
+    [data-theme="dark"] .room-body h3 {
+      color: #fff;
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 50px auto;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    [data-theme="dark"] .modal-content {
+      background-color: #0c2d41;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      z-index: 10;
+      color: white;
+      background-color: rgba(0,0,0,0.5);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .modal-image-container {
+      width: 100%;
+      height: 300px;
+    }
+    
+    .modal-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .modal-info {
+      padding: 25px;
+    }
+    
+    .modal-title {
+      color: #1a73e8;
+      margin-bottom: 10px;
+    }
+    
+    [data-theme="dark"] .modal-title {
+      color: #4dabf7;
+    }
+    
+    .modal-description {
+      margin-bottom: 20px;
+      color: #666;
+    }
+    
+    [data-theme="dark"] .modal-description {
+      color: #ccc;
+    }
+    
+    .modal-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .detail-label {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    [data-theme="dark"] .detail-label {
+      color: #fff;
+    }
+    
+    .detail-value {
+      color: #555;
+    }
+    
+    [data-theme="dark"] .detail-value {
+      color: #ccc;
+    }
+    
+    .modal-amenities h4 {
+      margin-bottom: 10px;
+    }
+    
+    [data-theme="dark"] .modal-amenities h4 {
+      color: #fff;
+    }
+    
+    .modal-amenities-list {
+      list-style-type: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 8px;
+      margin-bottom: 25px;
+    }
+    
+    .modal-amenities-list li {
+      padding-left: 20px;
+      position: relative;
+      color: #555;
+    }
+    
+    [data-theme="dark"] .modal-amenities-list li {
+      color: #ccc;
+    }
+    
+    .modal-amenities-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #1a73e8;
+    }
+    
+    [data-theme="dark"] .modal-amenities-list li:before {
+      color: #4dabf7;
+    }
+    
+    /* Footer */
+    .site-footer {
+      padding: 20px 0;
+      text-align: center;
+      border-top: 1px solid #eee;
+      margin-top: 40px;
+    }
+    
+    [data-theme="dark"] .site-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    
+    .muted {
+      color: #888;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+    
+    [data-theme="dark"] .muted {
+      color: #aaa;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: white;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        padding: 20px;
+      }
+      
+      [data-theme="dark"] .nav {
+        background-color: #0c2d41;
+      }
+      
+      .nav.active {
+        display: flex;
+      }
+      
+      .hamburger {
+        display: block;
+      }
+      
+      .modal-body {
+        flex-direction: column;
+      }
+      
+      .modal-image-container {
+        height: 200px;
+      }
+      
+      main {
+        padding: 120px 0 40px;
+      }
+    }
+  </style>
+  
 </head>
 <body>
   <header class="site-header">
@@ -23,45 +436,427 @@
   </header>
 
   <main class="container">
-    <h1>Cottages & Rates</h1>
-    <div class="cards">
-      <div class="room-card">
-        <img src="images&vids/12.jpg" alt="Cottage A with sea view">
-        <div class="room-body">
-          <h3>Cottage A — Sea View</h3>
-          <p>Up to 6 pax • ₱4,000 / day</p>
-          <p class="muted">Private patio with hammock, sea view, air-conditioned</p>
-          <a class="btn" href="booking.html?room=Cottage%20A">Reserve</a>
+      <h1>Cottages & Rates</h1>
+      <div class="cards">
+
+        <div class="room-card image-modal-trigger" data-cottage="WHITE HOUSE">
+          <img src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="White House">
+          <div class="room-body">
+              <h3>WHITE HOUSE</h3>
+          </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="PENTHOUSE">
+            <img src="https://images.unsplash.com/photo-1564078516393-cf04bd966897?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Penthouse">
+            <div class="room-body">
+                <h3>PENTHOUSE</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="AQUA CLASS">
+            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Aqua Class">
+            <div class="room-body">
+                <h3>AQUA CLASS</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="HEARTSUITE">
+            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Heartsuite">
+            <div class="room-body">
+                <h3>HEARTSUITE</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="STEPH'S SKYLOUNGE 842/844">
+            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Steph's Skylounge">
+            <div class="room-body">
+                <h3>STEPH'S SKYLOUNGE 842/844</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="STEPH'S 846">
+            <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Steph's 846">
+            <div class="room-body">
+                <h3>STEPH'S 846</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="STEPH'S 848">
+            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Steph's 848">
+            <div class="room-body">
+                <h3>STEPH'S 848</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="DE LUXE">
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="De Luxe">
+            <div class="room-body">
+                <h3>DE LUXE</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="BEATRICE A">
+            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Beatrice A">
+            <div class="room-body">
+                <h3>BEATRICE A</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="BEATRICE B">
+            <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Beatrice B">
+            <div class="room-body">
+                <h3>BEATRICE B</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="CONCIERGE 815/819">
+            <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Concierge">
+            <div class="room-body">
+                <h3>CONCIERGE 815/819</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="CONCIERGE 817">
+            <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Concierge 817">
+            <div class="room-body">
+                <h3>CONCIERGE 817</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="PREMIUM 838">
+            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Premium">
+            <div class="room-body">
+                <h3>PREMIUM 838</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="PREMIUM 840">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Premium 840">
+            <div class="room-body">
+                <h3>PREMIUM 840</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="GIANT KUBO">
+            <img src="https://images.unsplash.com/photo-1586375300773-8384e3e4916f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Giant Kubo">
+            <div class="room-body">
+                <h3>GIANT KUBO</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="SEASIDE (WHOLE)">
+            <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Seaside Whole">
+            <div class="room-body">
+                <h3>SEASIDE (WHOLE)</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="SEASIDE (HALF)">
+            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Seaside Half">
+            <div class="room-body">
+                <h3>SEASIDE (HALF)</h3>
+            </div>
+        </div>
+
+        <div class="room-card image-modal-trigger" data-cottage="BAMBOO KUBO">
+            <img src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Bamboo Kubo">
+            <div class="room-body">
+                <h3>BAMBOO KUBO</h3>
+            </div>
         </div>
       </div>
+    </main>
 
-      <div class="room-card">
-        <img src="images&vids/cottage.jpg" alt="Cottage B garden view">
-        <div class="room-body">
-          <h3>Cottage B — Garden</h3>
-          <p>Up to 4 pax • ₱2,500 / day</p>
-          <p class="muted">Garden view, fan-cooled, perfect for couples</p>
-          <a class="btn" href="booking.html?room=Cottage%20B">Reserve</a>
+  <!-- Modal Structure -->
+  <div class="modal" id="cottageModal">
+    <div class="modal-content">
+      <button class="close-modal">&times;</button>
+      <div class="modal-body">
+        <div class="modal-image-container">
+          <img class="modal-image" src="" alt="">
         </div>
-      </div>
-
-      <div class="room-card">
-        <img src="images&vids/cottage1.jpg" alt="Day trip activities">
-        <div class="room-body">
-          <h3>Day Trip Package</h3>
-          <p>Snorkel + Lunch • ₱1,200 / person</p>
-          <p class="muted">Includes equipment rental, lunch, and beach access</p>
-          <a class="btn" href="booking.html?room=Day%20Trip">Reserve</a>
+        <div class="modal-info">
+          <h2 class="modal-title"></h2>
+          <p class="modal-description"></p>
+          <div class="modal-details">
+            <div class="detail-item">
+              <span class="detail-label">Capacity:</span>
+              <span class="detail-value modal-capacity"></span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Price:</span>
+              <span class="detail-value modal-price"></span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Best For:</span>
+              <span class="detail-value modal-bestfor"></span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Location:</span>
+              <span class="detail-value modal-location"></span>
+            </div>
+          </div>
+          <div class="modal-amenities">
+            <h4>Amenities & Features:</h4>
+            <ul class="modal-amenities-list"></ul>
+          </div>
         </div>
       </div>
     </div>
-  </main>
+  </div>
 
   <footer class="site-footer container">
     <div>© 2025 Heart Of D' Ocean Beach Resort</div>
     <div class="muted">Prototype — no real payments on this demo</div>
   </footer>
 
-  <script src="main.js"></script>
+  <script>
+    // Cottage data for the modal
+    const cottageData = {
+      "WHITE HOUSE": {
+        image: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "A luxurious beachfront cottage with panoramic ocean views and premium amenities.",
+        capacity: "Up to 6 guests",
+        price: "$350/night",
+        bestFor: "Families, groups",
+        location: "Beachfront",
+        amenities: ["Private balcony", "Ocean view", "King-size bed", "Air conditioning", "Kitchenette", "Free WiFi"]
+      },
+      "PENTHOUSE": {
+        image: "https://images.unsplash.com/photo-1564078516393-cf04bd966897?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Our most exclusive accommodation with 360-degree views and premium luxury features.",
+        capacity: "Up to 4 guests",
+        price: "$500/night",
+        bestFor: "Couples, luxury travelers",
+        location: "Top floor",
+        amenities: ["Private rooftop terrace", "Jacuzzi", "Premium linens", "Smart TV", "Mini bar", "Concierge service"]
+      },
+      "AQUA CLASS": {
+        image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Modern cottage with direct pool access and contemporary design elements.",
+        capacity: "Up to 4 guests",
+        price: "$280/night",
+        bestFor: "Couples, small families",
+        location: "Poolside",
+        amenities: ["Direct pool access", "Contemporary design", "Queen-size bed", "Private patio", "Coffee maker", "Smart TV"]
+      },
+      "HEARTSUITE": {
+        image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Romantic suite designed for couples with special touches and intimate atmosphere.",
+        capacity: "2 guests",
+        price: "$220/night",
+        bestFor: "Couples, honeymooners",
+        location: "Garden view",
+        amenities: ["Romantic decor", "King-size bed", "Private garden", "Champagne on arrival", "Bathrobes", "Special turndown service"]
+      },
+      "STEPH'S SKYLOUNGE 842/844": {
+        image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Spacious interconnected rooms perfect for families or groups traveling together.",
+        capacity: "Up to 8 guests",
+        price: "$400/night",
+        bestFor: "Families, groups",
+        location: "Upper floor with ocean view",
+        amenities: ["Interconnected rooms", "Ocean view balcony", "Two bathrooms", "Sofa bed", "Dining area", "Coffee station"]
+      },
+      "STEPH'S 846": {
+        image: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Comfortable cottage with modern amenities and convenient access to resort facilities.",
+        capacity: "Up to 3 guests",
+        price: "$180/night",
+        bestFor: "Solo travelers, couples",
+        location: "Central resort area",
+        amenities: ["Queen-size bed", "Desk area", "Mini fridge", "Coffee maker", "Free WiFi", "Resort access"]
+      },
+      "STEPH'S 848": {
+        image: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Cozy cottage with garden views and comfortable furnishings for a relaxing stay.",
+        capacity: "Up to 3 guests",
+        price: "$190/night",
+        bestFor: "Solo travelers, couples",
+        location: "Garden view",
+        amenities: ["Queen-size bed", "Garden view", "Sitting area", "Mini fridge", "Coffee maker", "Free WiFi"]
+      },
+      "DE LUXE": {
+        image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Premium accommodation with upgraded amenities and stylish interior design.",
+        capacity: "Up to 4 guests",
+        price: "$320/night",
+        bestFor: "Couples, small families",
+        location: "Beachfront",
+        amenities: ["Ocean view", "King-size bed", "Sofa bed", "Premium toiletries", "Nespresso machine", "Smart TV"]
+      },
+      "BEATRICE A": {
+        image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Charming cottage with traditional design elements and modern comforts.",
+        capacity: "Up to 4 guests",
+        price: "$200/night",
+        bestFor: "Couples, small families",
+        location: "Garden area",
+        amenities: ["Traditional design", "Queen-size bed", "Private veranda", "Ceiling fan", "Mini fridge", "Coffee maker"]
+      },
+      "BEATRICE B": {
+        image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Comfortable cottage with garden access and relaxing atmosphere.",
+        capacity: "Up to 4 guests",
+        price: "$210/night",
+        bestFor: "Couples, small families",
+        location: "Garden area",
+        amenities: ["Garden access", "Queen-size bed", "Private seating area", "Ceiling fan", "Mini fridge", "Coffee maker"]
+      },
+      "CONCIERGE 815/819": {
+        image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Interconnected rooms with premium concierge service and exclusive amenities.",
+        capacity: "Up to 6 guests",
+        price: "$380/night",
+        bestFor: "Families, business travelers",
+        location: "Main building",
+        amenities: ["Interconnected rooms", "Concierge service", "Work desk", "Premium linens", "Coffee station", "Free WiFi"]
+      },
+      "CONCIERGE 817": {
+        image: "https://images.unsplash.com/photo-1591088398332-8a7791972843?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Premium room with dedicated concierge service and business-friendly amenities.",
+        capacity: "Up to 3 guests",
+        price: "$250/night",
+        bestFor: "Business travelers, couples",
+        location: "Main building",
+        amenities: ["Concierge service", "Work desk", "Premium linens", "Coffee maker", "Mini bar", "Free WiFi"]
+      },
+      "PREMIUM 838": {
+        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Upgraded accommodation with premium features and stylish design.",
+        capacity: "Up to 4 guests",
+        price: "$290/night",
+        bestFor: "Couples, small families",
+        location: "Beach view",
+        amenities: ["Beach view", "King-size bed", "Sofa bed", "Premium toiletries", "Coffee maker", "Smart TV"]
+      },
+      "PREMIUM 840": {
+        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Spacious premium cottage with modern amenities and comfortable living space.",
+        capacity: "Up to 4 guests",
+        price: "$300/night",
+        bestFor: "Couples, small families",
+        location: "Beach view",
+        amenities: ["Beach view", "King-size bed", "Sitting area", "Premium toiletries", "Coffee maker", "Smart TV"]
+      },
+      "GIANT KUBO": {
+        image: "https://images.unsplash.com/photo-1586375300773-8384e3e4916f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Traditional Filipino-style cottage with modern amenities and spacious layout.",
+        capacity: "Up to 8 guests",
+        price: "$350/night",
+        bestFor: "Large families, groups",
+        location: "Garden area",
+        amenities: ["Traditional design", "Spacious layout", "Multiple beds", "Private bathroom", "Dining area", "Garden view"]
+      },
+      "SEASIDE (WHOLE)": {
+        image: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Complete seaside cottage with direct beach access and panoramic ocean views.",
+        capacity: "Up to 6 guests",
+        price: "$400/night",
+        bestFor: "Families, groups",
+        location: "Beachfront",
+        amenities: ["Direct beach access", "Ocean view", "Multiple bedrooms", "Full kitchen", "Living area", "Private terrace"]
+      },
+      "SEASIDE (HALF)": {
+        image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Cozy seaside accommodation with beach proximity and comfortable amenities.",
+        capacity: "Up to 4 guests",
+        price: "$250/night",
+        bestFor: "Couples, small families",
+        location: "Beachfront",
+        amenities: ["Beach proximity", "Ocean view", "Queen-size bed", "Kitchenette", "Private balcony", "Free WiFi"]
+      },
+      "BAMBOO KUBO": {
+        image: "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        description: "Authentic bamboo cottage offering a traditional Filipino experience with modern comforts.",
+        capacity: "Up to 4 guests",
+        price: "$180/night",
+        bestFor: "Couples, cultural experience seekers",
+        location: "Garden area",
+        amenities: ["Traditional bamboo construction", "Queen-size bed", "Private bathroom", "Ceiling fan", "Mini fridge", "Garden view"]
+      }
+    };
+
+    // Modal functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('cottageModal');
+      const modalImage = document.querySelector('.modal-image');
+      const modalTitle = document.querySelector('.modal-title');
+      const modalDescription = document.querySelector('.modal-description');
+      const modalCapacity = document.querySelector('.modal-capacity');
+      const modalPrice = document.querySelector('.modal-price');
+      const modalBestFor = document.querySelector('.modal-bestfor');
+      const modalLocation = document.querySelector('.modal-location');
+      const modalAmenitiesList = document.querySelector('.modal-amenities-list');
+      const closeModalBtn = document.querySelector('.close-modal');
+      const bookNowBtn = document.querySelector('.book-now-btn');
+      const modalTriggers = document.querySelectorAll('.image-modal-trigger');
+      const menuBtn = document.getElementById('menuBtn');
+      const nav = document.getElementById('mainNav');
+
+      // Open modal when cottage card is clicked
+      modalTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function() {
+          const cottageName = this.getAttribute('data-cottage');
+          const cottage = cottageData[cottageName];
+          
+          if (cottage) {
+            modalImage.src = cottage.image;
+            modalImage.alt = cottageName;
+            modalTitle.textContent = cottageName;
+            modalDescription.textContent = cottage.description;
+            modalCapacity.textContent = cottage.capacity;
+            modalPrice.textContent = cottage.price;
+            modalBestFor.textContent = cottage.bestFor;
+            modalLocation.textContent = cottage.location;
+            
+            // Clear and populate amenities list
+            modalAmenitiesList.innerHTML = '';
+            cottage.amenities.forEach(amenity => {
+              const li = document.createElement('li');
+              li.textContent = amenity;
+              modalAmenitiesList.appendChild(li);
+            });
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+          }
+        });
+      });
+
+      // Close modal
+      closeModalBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      });
+
+      // Close modal when clicking outside
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+
+      // Book now button
+      bookNowBtn.addEventListener('click', function() {
+        alert('Redirecting to booking page...');
+        // In a real implementation, this would redirect to the booking page
+        // window.location.href = 'booking.html';
+      });
+
+      // Mobile menu toggle
+      menuBtn.addEventListener('click', function() {
+        nav.classList.toggle('active');
+      });
+
+      // Dark mode toggle (placeholder functionality)
+      const darkToggle = document.getElementById('darkToggle');
+      darkToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        // This is a simple toggle - in a real implementation, you would save the preference
+      });
+    });
+  </script>
 </body>
 </html>
