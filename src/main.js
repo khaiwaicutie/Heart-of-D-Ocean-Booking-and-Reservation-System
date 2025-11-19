@@ -154,7 +154,6 @@ function openLightbox(imageSrc, imageAlt) {
   
   document.body.appendChild(lightbox);
 }
-
 // ========== GCASH PAYMENT INTEGRATION ==========
 function initBookingPage() {
   const bookingForm = document.getElementById('bookingForm');
@@ -485,3 +484,4 @@ document.addEventListener('DOMContentLoaded', function() {
   
   console.log('🏝️ Heart Of D\' Ocean Beach Resort website loaded successfully!');
 });
+
