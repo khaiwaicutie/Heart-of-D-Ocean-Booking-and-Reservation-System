@@ -3,19 +3,22 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Booking — Heart of D' Ocean Beach Resort</title>
+  <title>Booking — Heart Of D' Ocean Beach Resort</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="styles.css" />
 </head> 
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="logo" href="index.html">Heart of D' Ocean Beach Resort</a>
-      <nav class="nav">
+      <a class="logo" href="index.html">Heart Of D' Ocean Beach Resort</a>
+      <nav class="nav" id="mainNav">
         <a href="index.html">Home</a>
         <a href="rooms.html">Cottages</a>
         <a href="gallery.html">Gallery</a>
         <a href="booking.html" class="cta">Book Now</a>
+        <button id="darkToggle" class="icon-btn" aria-label="Toggle dark">🌙</button>
       </nav>
+      <button id="menuBtn" class="hamburger" aria-label="menu">☰</button>
     </div>
   </header>
 
@@ -35,7 +38,7 @@
       </label>
 
       <label>Check-in date<input type="date" id="date" required></label>
-      <label>Guests<input type="number" id="guests" value="2" min="1"></label>
+      <label>Guests<input type="number" id="guests" value="2" min="1" max="10"></label>
 
       <div class="form-actions">
         <button type="submit" class="btn">Reserve & Pay</button>
@@ -52,10 +55,10 @@
   </main>
 
   <footer class="site-footer container">
-    <div>© Heart of D' Ocean Beach Resort</div>
+    <div>© 2025 Heart Of D' Ocean Beach Resort</div>
+    <div class="muted">Prototype — no real payments on this demo</div>
   </footer>
 
-<script src="main.js"></script>
+  <script src="main.js"></script>
 </body>
-</html>
-
+</html>   

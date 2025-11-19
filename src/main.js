@@ -1,195 +1,487 @@
-// main.js - single file for client-side demo logic
-(function(){
-  // simple utility
-  const $ = (sel, ctx=document)=> ctx.querySelector(sel);
-  const $$ = (sel, ctx=document)=> Array.from(ctx.querySelectorAll(sel));
+// Mobile menu functionality
+const menuBtn = document.getElementById('menuBtn');
+const mainNav = document.getElementById('mainNav');
+const closeMenu = document.getElementById('closeMenu');
 
-  /* --------- Promo slide behavior ---------- */
-  const promo = $('#promoSlide');
-  if(promo){
-    const close = $('#closePromo');
-    if(localStorage.getItem('promoClosed') === '1') promo.classList.add('hidden');
-    close?.addEventListener('click', ()=> {
-      promo.classList.add('hidden'); localStorage.setItem('promoClosed','1');
-    });
-  }
+menuBtn.addEventListener('click', () => {
+  mainNav.classList.add('active');
+});
 
-  /* --------- Dark mode toggle ---------- */
-  function applyTheme(theme){
-    if(theme === 'dark') document.documentElement.setAttribute('data-theme','dark');
-    else document.documentElement.removeAttribute('data-theme');
+closeMenu.addEventListener('click', () => {
+  mainNav.classList.remove('active');
+});
+
+// Close menu when clicking on links
+const navLinks = document.querySelectorAll('.nav a');
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    mainNav.classList.remove('active');
+  });
+});
+
+// Dark mode toggle
+const darkToggle = document.getElementById('darkToggle');
+
+darkToggle.addEventListener('click', () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
+  document.documentElement.setAttribute('data-theme', newTheme);
+  darkToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+  
+  // Save preference to localStorage
+  localStorage.setItem('theme', newTheme);
+});
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  darkToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+}
+
+// Active page indicator
+function setActivePage() {
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const navLinks = document.querySelectorAll('.nav a');
+  
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    const linkPage = link.getAttribute('href');
+    if (linkPage === currentPage || (currentPage === '' && linkPage === 'index.html')) {
+      link.classList.add('active');
+    }
+  });
+}
+
+// Scroll effect for header
+window.addEventListener('scroll', () => {
+  const header = document.querySelector('.site-header');
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
   }
-  const stored = localStorage.getItem('theme') || 'light';
-  applyTheme(stored);
-  $$('#darkToggle, #darkToggle2').forEach(btn=>{
-    btn?.addEventListener('click', ()=>{
-      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      localStorage.setItem('theme', next);
-    });
+});
+
+// Promo slide close functionality
+const closePromo = document.getElementById('closePromo');
+const promoSlide = document.getElementById('promoSlide');
+
+if (closePromo && promoSlide) {
+  closePromo.addEventListener('click', () => {
+    promoSlide.classList.add('hidden');
+    localStorage.setItem('promoClosed', 'true');
   });
 
-  /* --------- Mini gallery on home & gallery page ---------- */
-  const galleryImgs = [
-    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=60",
-    "https://images.unsplash.com/photo-1503264116251-35a269479413?w=1200&q=60",
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=60",
-    "https://images.unsplash.com/photo-1493558103817-58b2924bce98?w=1200&q=60",
-    "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=60"
-  ];
-  // fill mini gallery
-  const mg = $('#miniGallery');
-  if(mg){
-    galleryImgs.slice(0,4).forEach(u=>{
-      const img = document.createElement('img'); img.src = u; img.loading = 'lazy';
-      mg.appendChild(img);
-    });
+  // Check if promo was previously closed
+  if (localStorage.getItem('promoClosed') === 'true') {
+    promoSlide.classList.add('hidden');
   }
-  // gallery page full
-  const grid = $('#galleryGrid');
-  if(grid){
-    galleryImgs.forEach(u=>{
-      const img = document.createElement('img'); img.src=u; img.loading='lazy';
-      grid.appendChild(img);
+}
+
+// Lightbox functionality for gallery images
+function initLightbox() {
+  const images = document.querySelectorAll('.masonry img, .grid img');
+  
+  images.forEach(img => {
+    img.addEventListener('click', function() {
+      openLightbox(this.src, this.alt);
     });
+  });
+}
+
+function openLightbox(imageSrc, imageAlt) {
+  const lightbox = document.createElement('div');
+  lightbox.className = 'lightbox';
+  lightbox.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    cursor: pointer;
+  `;
+  
+  const img = document.createElement('img');
+  img.src = imageSrc;
+  img.alt = imageAlt;
+  img.style.cssText = `
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    cursor: default;
+  `;
+  
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  closeBtn.style.cssText = `
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+  
+  lightbox.appendChild(img);
+  lightbox.appendChild(closeBtn);
+  
+  closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    lightbox.remove();
+  });
+  
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      lightbox.remove();
+    }
+  });
+  
+  document.body.appendChild(lightbox);
+}
+
+// ========== GCASH PAYMENT INTEGRATION ==========
+function initBookingPage() {
+  const bookingForm = document.getElementById('bookingForm');
+  const saveDraftBtn = document.getElementById('saveDraft');
+  
+  // Load draft if exists
+  loadDraft();
+  
+  // Set minimum date to today
+  const dateInput = document.getElementById('date');
+  if (dateInput) {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
   }
-
-  /* --------- Booking storage logic ---------- */
-  function getBookings(){ return JSON.parse(localStorage.getItem('bookings')||'[]'); }
-  function saveBookings(list){ localStorage.setItem('bookings', JSON.stringify(list)); }
-
-  const bookingForm = $('#bookingForm');
-  if(bookingForm){
-    // prefill room if query param present
-    const params = new URLSearchParams(location.search);
-    const pre = params.get('room');
-    if(pre) $('#room').value = decodeURIComponent(pre);
-
-    bookingForm.addEventListener('submit', e=>{
+  
+  // Handle URL parameters for pre-filled room selection
+  const urlParams = new URLSearchParams(window.location.search);
+  const roomParam = urlParams.get('room');
+  if (roomParam && document.getElementById('room')) {
+    const roomSelect = document.getElementById('room');
+    for (let i = 0; i < roomSelect.options.length; i++) {
+      if (roomSelect.options[i].text.includes(roomParam)) {
+        roomSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+  
+  // Save draft functionality
+  if (saveDraftBtn) {
+    saveDraftBtn.addEventListener('click', saveDraft);
+  }
+  
+  // Form submission - DIRECT TO GCASH
+  if (bookingForm) {
+    bookingForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      const b = {
-        id: 'B'+Date.now(),
-        name: $('#name').value.trim(),
-        email: $('#email').value.trim(),
-        phone: $('#phone').value.trim(),
-        room: $('#room').value,
-        date: $('#date').value,
-        guests: Number($('#guests').value),
-        created: new Date().toISOString()
-      };
-      const list = getBookings();
-      list.push(b);
-      saveBookings(list);
-      $('#formMessage').textContent = 'Booking saved locally. Redirecting to payment...';
-
-      // simulate external payment redirect using PayPal sandbox link (demo)
-      const amount = estimateAmount(b.room);
-      setTimeout(()=> {
-        // open in new tab (simulate secure external checkout)
-        const payUrl = `https://www.paypal.com/pay?amount=${amount}&currency=PHP`;
-        window.open(payUrl,'_blank');
-        $('#formMessage').textContent = 'Payment page opened in new tab. Booking stored locally.';
-      }, 700);
-      bookingForm.reset();
+      // DIRECT TO GCASH AGAD
+      processBookingAndGCash();
     });
-
-    $('#saveDraft')?.addEventListener('click', ()=>{
-      const draft = {
-        name: $('#name').value, email: $('#email').value, room: $('#room').value
-      };
-      localStorage.setItem('bookingDraft', JSON.stringify(draft));
-      $('#formMessage').textContent = 'Draft saved locally.';
-    });
-
-    // restore draft if exists
-    const d = localStorage.getItem('bookingDraft');
-    if(d){ try{ const dd = JSON.parse(d); if(dd.name) $('#name').value = dd.name; if(dd.email) $('#email').value = dd.email; }catch(e){} }
   }
+}
 
-  function estimateAmount(room){
-    if(room.includes('Cottage A')) return 4000;
-    if(room.includes('Cottage B')) return 2500;
-    if(room.includes('Day Trip')) return 1200;
-    return 1000;
-  }
+function saveDraft() {
+  const formData = {
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    room: document.getElementById('room').value,
+    date: document.getElementById('date').value,
+    guests: document.getElementById('guests').value
+  };
+  
+  localStorage.setItem('bookingDraft', JSON.stringify(formData));
+  showMessage('Draft saved! You can continue later.', 'success');
+}
 
-  /* --------- Admin login & dashboard (client-side demo only) ---------- */
-  const adminLoginBtn = $('#adminLogin');
-  if(adminLoginBtn){
-    adminLoginBtn.addEventListener('click', ()=>{
-      const u = $('#adminUser').value.trim();
-      const p = $('#adminPass').value;
-      // HARD-CODED CREDENTIALS for prototype ONLY
-      if(u === 'admin' && p === 'bluecove123'){
-        sessionStorage.setItem('adminAuth','1');
-        showAdmin();
-      } else {
-        $('#adminMsg').textContent = 'Invalid credentials (demo). Use admin / bluecove123';
+function loadDraft() {
+  const draft = localStorage.getItem('bookingDraft');
+  if (draft) {
+    const formData = JSON.parse(draft);
+    Object.keys(formData).forEach(key => {
+      const element = document.getElementById(key);
+      if (element && formData[key]) {
+        element.value = formData[key];
       }
     });
   }
+}
 
-  function showAdmin(){
-    $('#loginCard').style.display = 'none';
-    $('#dashboard').style.display = 'block';
-    $('#logoutBtn').style.display = 'inline';
-    renderDashboard();
-    // simulate live new bookings arriving every 12s (demo)
-    window.demoIncoming = setInterval(()=> {
-      const sample = { id:'B'+Date.now(), name:'Guest'+Math.floor(Math.random()*90+10),
-        room: ['Cottage A','Cottage B','Day Trip'][Math.floor(Math.random()*3)],
-        date: new Date().toISOString(), created:new Date().toISOString() };
-      const list = getBookings(); list.push(sample); saveBookings(list);
-      renderDashboard();
-    }, 12000);
+// DIRECT PROCESS TO GCASH
+function processBookingAndGCash() {
+  // Validate form first
+  if (!validateForm()) {
+    showMessage('Please fill in all required fields.', 'error');
+    return;
   }
+  
+  const formData = {
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    room: document.getElementById('room').value,
+    date: document.getElementById('date').value,
+    guests: document.getElementById('guests').value,
+    timestamp: new Date().toISOString(),
+    bookingId: 'RESORT' + Date.now()
+  };
+  
+  // Save booking to localStorage
+  const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+  bookings.push(formData);
+  localStorage.setItem('bookings', JSON.stringify(books));
+  
+  // Clear draft
+  localStorage.removeItem('bookingDraft');
+  
+  // DIRECT TO GCASH - NO MESSAGE, NO DELAY
+  openGCashPayment(formData);
+}
 
-  $('#logoutBtn')?.addEventListener('click', ()=>{
-    sessionStorage.removeItem('adminAuth'); $('#dashboard').style.display='none'; $('#loginCard').style.display='';
-    $('#logoutBtn').style.display='none';
-    clearInterval(window.demoIncoming);
-  });
-
-  function renderDashboard(){
-    const list = getBookings();
-    $('#statTotal').textContent = list.length;
-    // today count
-    const today = list.filter(b=>{
-      const d = new Date(b.created); const t = new Date();
-      return d.toDateString() === t.toDateString();
-    }).length;
-    $('#statToday').textContent = today;
-    const rev = list.reduce((s,b)=>{
-      return s + estimateAmount(b.room);
-    },0);
-    $('#statRevenue').textContent = '₱'+rev.toLocaleString();
-
-    const out = $('#bookingsList');
-    if(!out) return;
-    out.innerHTML = '';
-    list.slice().reverse().forEach(b=>{
-      const div = document.createElement('div'); div.className='card';
-      div.innerHTML = `<strong>${b.name}</strong> <div class="muted">${b.room} • ${new Date(b.created).toLocaleString()}</div><div>${b.email||''} ${b.phone? '• '+b.phone : ''}</div>`;
-      out.appendChild(div);
-    });
+function validateForm() {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const date = document.getElementById('date').value;
+  
+  if (!name || !email || !phone || !date) {
+    return false;
   }
+  
+  return true;
+}
 
-  // auto show admin if already authenticated
-  if(location.pathname.endsWith('admin.html') && sessionStorage.getItem('adminAuth') === '1'){
-    showAdmin();
+function openGCashPayment(bookingData) {
+  const amount = calculateGCashAmount(bookingData.room, bookingData.guests);
+  
+  // Open GCash window immediately
+  const gcashWindow = window.open('', 'GCash Payment', 'width=500,height=700,scrollbars=yes');
+  
+  gcashWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>GCash Payment - Heart Of D' Ocean Beach Resort</title>
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body { 
+          font-family: 'Arial', sans-serif; 
+          padding: 20px; 
+          text-align: center;
+          background: linear-gradient(135deg, #0033A0, #0070BA);
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .gcash-container {
+          background: white;
+          padding: 30px;
+          border-radius: 20px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          max-width: 400px;
+          width: 100%;
+        }
+        .gcash-logo { 
+          color: #0033A0; 
+          font-size: 2.5em; 
+          font-weight: bold;
+          margin-bottom: 20px;
+        }
+        .amount { 
+          font-size: 3em; 
+          color: #0033A0; 
+          margin: 20px 0;
+          font-weight: bold;
+        }
+        .details {
+          text-align: left;
+          margin: 25px 0;
+          padding: 20px;
+          background: #f8f9fa;
+          border-radius: 12px;
+          border-left: 4px solid #0033A0;
+        }
+        .details p {
+          margin: 8px 0;
+          color: #333;
+        }
+        .qr-container {
+          background: #fff;
+          padding: 25px;
+          border: 3px dashed #0033A0;
+          border-radius: 15px;
+          margin: 20px 0;
+        }
+        .qr-placeholder {
+          font-size: 4em;
+          margin: 10px 0;
+        }
+        .btn { 
+          background: #0033A0; 
+          color: white; 
+          padding: 15px 30px; 
+          border: none; 
+          border-radius: 25px; 
+          font-size: 1.1em; 
+          cursor: pointer;
+          margin: 10px;
+          font-weight: bold;
+          width: 200px;
+        }
+        .btn.success { 
+          background: #28a745; 
+        }
+        .btn.cancel { 
+          background: #6c757d; 
+        }
+        .instruction {
+          color: #666;
+          font-size: 0.9em;
+          margin: 15px 0;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="gcash-container">
+        <div class="gcash-logo">GCash</div>
+        <h2>Payment Request</h2>
+        <div class="amount">₱${amount.toLocaleString()}</div>
+        
+        <div class="details">
+          <p><strong>Merchant:</strong> Heart Of D' Ocean Beach Resort</p>
+          <p><strong>Booking For:</strong> ${bookingData.name}</p>
+          <p><strong>Package:</strong> ${bookingData.room.split('—')[0].trim()}</p>
+          <p><strong>Check-in:</strong> ${bookingData.date}</p>
+          <p><strong>Guests:</strong> ${bookingData.guests}</p>
+          <p><strong>Reference ID:</strong> ${bookingData.bookingId}</p>
+        </div>
+        
+        <p class="instruction">Scan QR code below to pay</p>
+        
+        <div class="qr-container">
+          <div class="qr-placeholder">📱</div>
+          <div style="font-size: 0.8em; color: #666; margin-top: 10px;">
+            GCash QR Code<br>
+            <small>Point your GCash app to scan</small>
+          </div>
+        </div>
+        
+        <p class="instruction">Or enter mobile number: <strong>0917-123-4567</strong></p>
+        
+        <div style="margin-top: 25px;">
+          <button class="btn success" onclick="paySuccess()">💳 Simulate Payment</button>
+          <button class="btn cancel" onclick="window.close()">❌ Cancel</button>
+        </div>
+      </div>
+      
+      <script>
+        function paySuccess() {
+          const successData = {
+            payment: 'success',
+            booking: ${JSON.stringify(bookingData)},
+            amount: ${amount},
+            transactionId: 'GC' + Date.now()
+          };
+          
+          alert('💰 Payment Successful!\\\\n\\\\nAmount: ₱${amount.toLocaleString()}\\\\nReference: ${bookingData.bookingId}\\\\n\\\\nThank you for your booking!');
+          
+          // Send success message back to main window
+          if (window.opener && !window.opener.closed) {
+            window.opener.postMessage(successData, '*');
+          }
+          
+          window.close();
+        }
+      </script>
+    </body>
+    </html>
+  `);
+}
+
+function calculateGCashAmount(room, guests) {
+  const prices = {
+    'Cottage A — ₱4,000': 4000,
+    'Cottage B — ₱2,500': 2500,
+    'Day Trip — ₱1,200': 1200 * parseInt(guests || 1)
+  };
+  return prices[room] || 0;
+}
+
+// Handle payment success from GCash window
+window.addEventListener('message', function(event) {
+  if (event.data && event.data.payment === 'success') {
+    // Show success message on main page
+    showMessage('🎉 Payment successful! Your booking is confirmed. We\'ve sent a confirmation email.', 'success');
+    
+    // Update booking status
+    const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+    const lastBooking = bookings[bookings.length - 1];
+    if (lastBooking) {
+      lastBooking.paymentStatus = 'paid';
+      lastBooking.transactionId = event.data.transactionId;
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+    }
+    
+    // Show confirmation details
+    setTimeout(() => {
+      alert(`🏝️ Booking Confirmed!\\n\\nName: ${event.data.booking.name}\\nAmount: ₱${event.data.amount.toLocaleString()}\\nReference: ${event.data.booking.bookingId}\\n\\nThank you for choosing Heart Of D' Ocean!`);
+    }, 1000);
   }
+});
 
-  /* --------- On load, if admin page and not logged in, show login tip ------- */
-  if(location.pathname.endsWith('admin.html') && sessionStorage.getItem('adminAuth') !== '1'){
-    $('#adminMsg').textContent = 'Demo admin credentials — user: admin, pass: bluecove123';
+function showMessage(message, type = 'info') {
+  const formMessage = document.getElementById('formMessage');
+  if (formMessage) {
+    formMessage.textContent = message;
+    formMessage.className = type === 'success' ? 'success-message' : 'muted';
+    formMessage.style.display = 'block';
+    
+    setTimeout(() => {
+      formMessage.style.display = 'none';
+    }, 5000);
   }
+}
 
-  /* small UI: mobile menu toggles */
-  $$('#menuBtn, #menuBtn2').forEach(mb=>{
-    mb?.addEventListener('click', ()=>{
-      const nav = document.querySelector('.nav');
-      if(nav) nav.style.display = nav.style.display === 'flex' ? 'none':'flex';
-    });
-  });
+// Page-specific initialization
+function initPageSpecificFeatures() {
+  const currentPage = window.location.pathname.split('/').pop();
+  
+  if (currentPage === 'booking.html') {
+    initBookingPage();
+  }
+  
+  if (currentPage === 'gallery.html') {
+    initLightbox();
+  }
+}
 
-})();
+// Initialize everything when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  setActivePage();
+  initPageSpecificFeatures();
+  
+  console.log('🏝️ Heart Of D\' Ocean Beach Resort website loaded successfully!');
+});
